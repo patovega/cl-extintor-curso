@@ -475,12 +475,12 @@ function update(dt){
     if(!hitNow.has(c))c.cover=Math.max(0,c.cover-.06*dt);
     if(c.lit){
       if(c.life<.02){c.lit=false;c.life=0;c.cover=Math.max(c.cover,.4);c.heat=0;continue}
-      const rate=L.g+L.gre*EF.rk*(1-c.cover)*(c.life<.5?1:.35);
+      const rate=L.g+L.gre*(EF.rk??1)*(1-c.cover)*(c.life<.5?1:.35);
       c.life=Math.min(1,c.life+rate*(1-c.life)*dt);sum+=c.life;
     }else{
       let src=0;if(i>0&&cs[i-1].lit)src=Math.max(src,cs[i-1].life);if(i<cs.length-1&&cs[i+1].lit)src=Math.max(src,cs[i+1].life);
       if(src>.3){
-        const r=c.ever?L.rek*EF.rk*src*(1-c.cover):L.spread*src*(1-c.cover*.5);
+        const r=c.ever?L.rek*(EF.rk??1)*src*(1-c.cover):L.spread*src*(1-c.cover*.5);
         c.heat+=r*dt;
         if(c.heat>=1){c.lit=true;c.life=.15;c.heat=0;if(c.ever)g.st.rek++;c.ever=true;for(let j=0;j<5;j++)parts.push({k:'spark',x:c.x,y:c.by-10,vx:rnd(-40,40),vy:rnd(-90,-30),a:0,l:.6})}
       }else c.heat=Math.max(0,c.heat-.2*dt);

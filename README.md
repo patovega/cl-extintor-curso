@@ -32,12 +32,33 @@ Abre `index.html` en el navegador. No requiere instalación ni dependencias.
 2. En **Settings → Pages**, elige *Deploy from a branch*, rama `main`, carpeta `/ (root)`.
 3. El juego quedará en `https://<usuario>.github.io/<repositorio>/`.
 
+## Modo realidad virtual (WebXR)
+
+`vr.html` es la versión 3D para visores como Meta Quest. Usa las mismas reglas y comparte el progreso con la versión 2D.
+
+1. Abre `https://<usuario>.github.io/<repositorio>/vr.html` en el navegador del visor. WebXR exige HTTPS, y GitHub Pages ya lo usa.
+2. Pulsa **Entrar en VR**.
+
+| Acción | Control |
+|--------|---------|
+| Sostener el extintor | Mano izquierda |
+| Apuntar la boquilla | Mano derecha |
+| Sacar el pasador | Acerca la mano derecha al anillo amarillo y aprieta el *grip* (o botón A/X) |
+| Apretar la palanca | Gatillo |
+| Caminar / girar | Stick izquierdo / stick derecho |
+| Evacuar (nivel 5) | Camina hasta la puerta verde |
+| Volver al menú | Botón B/Y |
+
+Sin visor también se puede probar en el computador con mouse y teclado.
+
 ## Estructura
 
 ```
 index.html      # estructura de la página
 css/style.css   # estilos
 js/game.js      # lógica del juego, audio y escenas (canvas)
+vr.html         # versión WebXR
+js/vr.js        # escenario 3D, controles VR y reglas (Three.js desde CDN)
 ```
 
 > En un incendio real, primero da la alarma y evacúa. Combate solo un fuego pequeño, si sabes cómo hacerlo y tienes la salida despejada a tu espalda.

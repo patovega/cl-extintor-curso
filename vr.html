@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Apaga el fuego en realidad virtual (WebXR): entrenamiento en el uso del extintor para Meta Quest y navegadores compatibles.">
+<meta name="theme-color" content="#14181d">
+<title>Apaga el fuego · VR</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#14181d;color:#f4efe4;
+    font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif}
+  canvas{display:block;touch-action:none}
+  #top{position:fixed;left:0;right:0;top:0;display:flex;gap:12px;align-items:center;padding:10px 14px;
+    background:rgba(20,24,29,.85);border-bottom:1px solid rgba(255,255,255,.14);z-index:5;flex-wrap:wrap}
+  #top a{color:#a9b0b8;text-decoration:none;font-size:14px}
+  #top b{color:#f2c500;font-size:17px}
+  #top .sp{flex:1}
+  #bVR{height:40px;padding:0 18px;border:0;border-radius:10px;background:#f2c500;color:#1b1a10;font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+  #noVR{font-size:13px;color:#a9b0b8}
+  #help{position:fixed;left:14px;bottom:12px;margin:0;font-size:13px;color:#a9b0b8;background:rgba(20,24,29,.8);
+    padding:8px 12px;border-radius:10px;z-index:5;max-width:calc(100vw - 28px)}
+  body.xr #top,body.xr #help{display:none}
+</style>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js" } }
+</script>
+</head>
+<body>
+<div id="top">
+  <a href="index.html">← Versión 2D</a>
+  <b>Apaga el fuego · VR</b>
+  <span class="sp"></span>
+  <span id="noVR" hidden>Este navegador no tiene WebXR: puedes probar con mouse y teclado.</span>
+  <button id="bVR" hidden>Entrar en VR</button>
+</div>
+<p id="help">Mouse: apuntar · Clic o Espacio: descargar · P: pasador · W A S D: caminar · Clic derecho + arrastrar: mirar · E: evacuar · M: silencio · Esc: menú</p>
+<script type="module" src="js/vr.js"></script>
+</body>
+</html>
