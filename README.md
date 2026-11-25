@@ -48,6 +48,7 @@ Abre `index.html` en el navegador. No requiere instalación ni dependencias.
 | Caminar / girar | Stick izquierdo / stick derecho |
 | Evacuar (nivel 5) | Camina hasta la puerta verde |
 | Volver al menú | Botón B/Y |
+| Salir de VR | Menú → botón «Salir de VR» (o el botón Meta) |
 
 ![Controles en VR](docs/controles.png)
 

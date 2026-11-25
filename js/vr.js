@@ -415,7 +415,9 @@ function drawMenu(c, P) {
       }
     });
   });
-  button(c, P, { id: 'start', x: 56, y: 690, w: 912, h: 92, kind: 'pri', label: `Comenzar · nivel ${selLevel}`, fs: 40, fn: () => goLevel(selLevel) });
+  const xr = isXR(), ws = xr ? 640 : 912;
+  button(c, P, { id: 'start', x: 56, y: 690, w: ws, h: 92, kind: 'pri', label: `Comenzar · nivel ${selLevel}`, fs: 40, fn: () => goLevel(selLevel) });
+  if (xr) button(c, P, { id: 'exitxr', x: 56 + ws + 12, y: 690, w: 912 - ws - 12, h: 92, label: 'Salir de VR', fs: 34, fn: exitXR });
 }
 function drawPick(c, P) {
   const L = LV[selLevel - 1]; card(c, P);
@@ -1083,6 +1085,7 @@ bVR.addEventListener('click', async () => {
     await renderer.xr.setSession(s);
   } catch (e) { alert('No se pudo iniciar la sesión VR: ' + e.message) }
 });
+function exitXR() { SFX.click(); const s = renderer.xr.getSession(); if (s) s.end().catch(() => { }) }
 renderer.xr.addEventListener('sessionstart', () => {
   document.body.classList.add('xr'); renderer.xr.setFoveation(1);
   player.position.set(0, 0, 0); player.rotation.set(0, 0, 0); camera.rotation.set(0, 0, 0);
