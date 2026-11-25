@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Apaga el fuego: juego de entrenamiento en el uso del extintor (PASS) con 5 niveles y distintas clases de fuego.">
+<meta name="theme-color" content="#14181d">
+<title>Apaga el fuego</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<div id="hud">
+  <div class="chip" id="hTime"></div>
+  <div class="chip" id="hFire"></div>
+  <div class="chip" id="hSmoke"></div>
+  <div class="chip" id="hCharge"></div>
+  <div class="sp"></div>
+  <button class="chip" id="bMute" aria-label="Silenciar"></button>
+  <button class="chip" id="bExit" aria-label="Salir al menú"></button>
+</div>
+<div class="chip" id="toast"></div>
+
+<div id="ctlL">
+  <button class="rb" id="bNear" aria-label="Acercar"></button>
+  <div id="dist">4,0 m</div>
+  <button class="rb" id="bFar" aria-label="Alejar"></button>
+</div>
+<div id="ctlR">
+  <button class="chip" id="bEvac"></button>
+  <button class="chip" id="bPin"></button>
+  <button class="rb" id="bLever" aria-label="Apretar la palanca"></button>
+</div>
+
+<section class="scr on" id="scrStart"><div class="card">
+  <header>
+    <h1>Apaga el fuego</h1>
+    <p class="sub">Entrenamiento con extintor</p>
+    <button class="muteTop" id="bMute2" aria-label="Silenciar"></button>
+  </header>
+  <div class="body">
+    <div class="steps4">
+      <div><b>1</b>Saca el pasador</div>
+      <div><b>2</b>Apunta a la base</div>
+      <div><b>3</b>Aprieta la palanca</div>
+      <div><b>4</b>Barre de lado a lado, a 2–3 m</div>
+    </div>
+    <p class="keys">Arrastra para apuntar y mantén Apretar para descargar. En computador: mouse, clic y barra espaciadora.</p>
+    <div class="lvls" id="lvls"></div>
+  </div>
+  <footer><button class="btn pri" id="bStart">Comenzar</button></footer>
+</div></section>
+
+<section class="scr" id="scrPick"><div class="card">
+  <header><h2 id="pkT"></h2><p class="sub" id="pkD"></p></header>
+  <div class="body"><div class="opts" id="pkOpts"></div></div>
+  <footer><button class="btn sec" id="pkBack">Volver</button></footer>
+</div></section>
+
+<section class="scr" id="scrEnd"><div class="card">
+  <header><h2 id="enT"></h2><div class="stars" id="enStars"></div><p class="meta" id="enMeta"></p></header>
+  <div class="body">
+    <ul class="fb" id="enFb"></ul>
+    <div class="safe"><span id="enAl"></span><p style="margin:0"><b>En un incendio real</b>, primero da la alarma y evacúa. Combate solo un fuego pequeño, si sabes cómo hacerlo y tienes la salida despejada a tu espalda.</p></div>
+  </div>
+  <footer>
+    <button class="btn sec" id="enMenu">Menú</button>
+    <button class="btn sec" id="enRetry">Jugar de nuevo</button>
+    <button class="btn pri" id="enNext">Siguiente nivel</button>
+  </footer>
+</div></section>
+
+<script src="js/game.js"></script>
+</body>
+</html>
