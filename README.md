@@ -49,6 +49,8 @@ Abre `index.html` en el navegador. No requiere instalación ni dependencias.
 | Evacuar (nivel 5) | Camina hasta la puerta verde |
 | Volver al menú | Botón B/Y |
 
+![Controles en VR](docs/controles.png)
+
 Sin visor también se puede probar en el computador con mouse y teclado.
 
 ## Estructura
