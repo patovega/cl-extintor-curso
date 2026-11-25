@@ -50,6 +50,12 @@ Abre `index.html` en el navegador. No requiere instalación ni dependencias.
 | Volver al menú | Botón B/Y |
 | Salir de VR | Menú → botón «Salir de VR» (o el botón Meta) |
 
+### Realidad mixta (el fuego en tu casa)
+
+En el Quest aparece también el botón **Realidad mixta (tu casa)**: se ve tu entorno real a través
+de las cámaras del visor (passthrough) y el fuego aparece a ~2,6 m frente a ti, sin paredes virtuales.
+Despeja el espacio antes de jugar: el extintor y el fuego son virtuales, pero tú te mueves en tu casa real.
+
 ![Controles en VR](docs/controles.png)
 
 Sin visor también se puede probar en el computador con mouse y teclado.

@@ -64,7 +64,8 @@ const LV = [
 ];
 
 /* ============ motor 3D ============ */
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+let AR = false;  // realidad mixta (passthrough): sin paredes ni fondo
 renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
 renderer.setSize(innerWidth, innerHeight);
 renderer.xr.enabled = true;
@@ -385,6 +386,7 @@ function button(c, P, b) {
 }
 const STEPTX = [['pin', 'Saca el pasador'], ['target', 'Apunta a la base del fuego'], ['lever', 'Aprieta la palanca'], ['sweep', 'Barre de lado a lado, a 2–3 m']];
 const isXR = () => renderer.xr.isPresenting;
+const AR_DIST = 2.6;  // en realidad mixta el fuego aparece más cerca (cabe en una pieza)
 
 function drawMenu(c, P) {
   card(c, P);
@@ -417,7 +419,7 @@ function drawMenu(c, P) {
   });
   const xr = isXR(), ws = xr ? 640 : 912;
   button(c, P, { id: 'start', x: 56, y: 690, w: ws, h: 92, kind: 'pri', label: `Comenzar · nivel ${selLevel}`, fs: 40, fn: () => goLevel(selLevel) });
-  if (xr) button(c, P, { id: 'exitxr', x: 56 + ws + 12, y: 690, w: 912 - ws - 12, h: 92, label: 'Salir de VR', fs: 34, fn: exitXR });
+  if (xr) button(c, P, { id: 'exitxr', x: 56 + ws + 12, y: 690, w: 912 - ws - 12, h: 92, label: AR ? 'Salir' : 'Salir de VR', fs: 34, fn: exitXR });
 }
 function drawPick(c, P) {
   const L = LV[selLevel - 1]; card(c, P);
@@ -576,7 +578,7 @@ function placeUI() {
 }
 
 function newGame(n, agent) {
-  const L = LV[n - 1], s = SCN[L.scene], FZ = -L.dist;
+  const L = LV[n - 1], s = SCN[L.scene], FZ = -(AR ? Math.min(L.dist, AR_DIST) : L.dist);
   const cells = L.cells.map(c => ({ x: (c[0] - L.cx) * U, y: s.yb(c), z: FZ + s.cz, lit: c[2] > 0, ever: c[2] > 0, life: c[2], heat: 0, cover: 0, seed: Math.random() * 20 }));
   const sum = cells.reduce((a, c) => a + c.life, 0);
   return {
@@ -596,7 +598,8 @@ function disposeLevel() {
 function buildLevel(g) {
   disposeLevel();
   const L = g.L, s = SCN[L.scene], FZ = g.FZ;
-  room = buildRoom(levelG, s, FZ);
+  const shell = new THREE.Group(); shell.visible = !AR; levelG.add(shell);
+  room = buildRoom(shell, s, FZ);
   s.props(levelG, FZ, room.zb, room.x1, s.door);
   hemi.intensity = s.hemi; sun.intensity = s.hemi;
   const K = KIND[L.cls];
@@ -607,9 +610,9 @@ function buildLevel(g) {
     grp.add(c.gl); c.g = grp; levelG.add(grp);
   }
   if (L.smoke) {
-    scene.fog = new THREE.FogExp2(0x34363a, .02); scene.background = new THREE.Color(0x34363a);
+    scene.fog = new THREE.FogExp2(0x34363a, AR ? .05 : .02); scene.background = AR ? null : new THREE.Color(0x34363a);
     g.smokeP = plane(levelG, room.x1 - room.x0, room.zf - room.zb, MB(0x2a2b2e, { transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }), (room.x0 + room.x1) / 2, 2.75, (room.zb + room.zf) / 2, 0, Math.PI / 2);
-  } else { scene.fog = null; scene.background = BG }
+  } else { scene.fog = null; scene.background = AR ? null : BG }
   HUD.mesh.position.set(0, 2.36, FZ + .05);
   smokePS.clear(); sparkPS.clear(); streamPS.clear(); cloudPS.clear();
   alarmLight.position.set(0, 2.5, FZ + 1.2); alarmLight.intensity = 0;
@@ -1078,13 +1081,18 @@ const bVR = $('#bVR');
 if (navigator.xr && navigator.xr.isSessionSupported) {
   navigator.xr.isSessionSupported('immersive-vr').then(ok => { bVR.hidden = !ok; $('#noVR').hidden = ok }).catch(() => { $('#noVR').hidden = false });
 } else $('#noVR').hidden = false;
-bVR.addEventListener('click', async () => {
+const bAR = $('#bAR');
+if (navigator.xr && navigator.xr.isSessionSupported) navigator.xr.isSessionSupported('immersive-ar').then(ok => { bAR.hidden = !ok; if (ok) $('#noVR').hidden = true }).catch(() => { });
+async function enterXR(ar) {
   audioInit();
   try {
-    const s = await navigator.xr.requestSession('immersive-vr', { optionalFeatures: ['local-floor', 'bounded-floor', 'hand-tracking'] });
+    AR = ar;
+    const s = await navigator.xr.requestSession(ar ? 'immersive-ar' : 'immersive-vr', { optionalFeatures: ['local-floor', 'bounded-floor', 'hand-tracking'] });
     await renderer.xr.setSession(s);
-  } catch (e) { alert('No se pudo iniciar la sesión VR: ' + e.message) }
-});
+  } catch (e) { AR = false; alert('No se pudo iniciar la sesión ' + (ar ? 'de realidad mixta' : 'VR') + ': ' + e.message) }
+}
+bVR.addEventListener('click', () => enterXR(false));
+bAR.addEventListener('click', () => enterXR(true));
 function exitXR() { SFX.click(); const s = renderer.xr.getSession(); if (s) s.end().catch(() => { }) }
 renderer.xr.addEventListener('sessionstart', () => {
   document.body.classList.add('xr'); renderer.xr.setFoveation(1);
@@ -1092,7 +1100,7 @@ renderer.xr.addEventListener('sessionstart', () => {
   openMenu(); needPlace = 4;
 });
 renderer.xr.addEventListener('sessionend', () => {
-  document.body.classList.remove('xr');
+  document.body.classList.remove('xr'); AR = false;
   player.position.set(0, 0, 0); player.rotation.set(0, 0, 0);
   camera.position.set(0, 1.6, 0); yaw = pitch = 0; camera.rotation.set(0, 0, 0);
   resize(); openMenu();
